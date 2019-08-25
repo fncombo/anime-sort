@@ -84,7 +84,7 @@ function CompareAnime() {
         <>
             <div className="container is-column">
                 <h1>Which anime is better?</h1>
-                <p>Choose by clicking on the image or using the left and right arrows.</p>
+                <p>Choose by clicking on the image or using the left and right arrow keys.</p>
                 <div className="comparison-row is-border">
                     <div className="comparison-col">
                         <h2>{left.title}</h2>
