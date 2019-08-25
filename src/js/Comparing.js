@@ -63,7 +63,10 @@ function CompareAnime() {
             // Bind event to choose an anime using the arrow keys
             window.addEventListener('keyup', keyHandler, { once: true })
 
-            return
+            // Unbind event on re-render
+            return () => {
+                window.removeEventListener('keyup', keyHandler)
+            }
         }
 
         // Get a new pair of anime to compare
