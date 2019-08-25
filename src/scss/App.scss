@@ -1,0 +1,162 @@
+@import '~normalize.css/normalize.css';
+@import '_base.scss';
+
+html,
+body {
+    display: flex;
+    min-height: 100%;
+    font-family: 'Open Sans', BlinkMacSystemFont, -apple-system, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
+    color: #000;
+    font-size: 16px;
+}
+
+body {
+    display: flex;
+    padding: 1.5rem 0;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    line-height: 1.5;
+}
+
+#root {
+    width: 100%;
+}
+
+.container {
+    width: 100%;
+    max-width: 1000px;
+    min-width: 750px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &.is-column {
+        flex-direction: column;
+    }
+}
+
+a {
+    color: $blue;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+h1 {
+    margin: 0 0 0.5rem;
+    font-size: 2rem;
+    font-weight: 400;
+}
+
+h2 {
+    margin: 1rem 0 0;
+    padding: 0 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+h3 {
+    margin: 0.5rem 0;
+    padding: 0 0 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 400;
+    border-bottom: 1px solid $border;
+
+    a {
+        color: #000;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+p {
+    margin: 0 0 0.5rem;
+}
+
+strong {
+    font-weight: 600;
+}
+
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+input {
+    margin: 1rem 0;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    border: 1px solid $border;
+    outline: none;
+
+    &:hover {
+        border-color: $border-hover;
+    }
+
+    &:focus {
+        border-color: $border-active;
+    }
+}
+
+button {
+    background: #fff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.25rem;
+    border: 1px solid $blue;
+    outline: none;
+    color: $blue;
+    cursor: pointer;
+    transition: all $duration $easing;
+
+    &[disabled] {
+        opacity: 0.25;
+        pointer-events: none;
+    }
+
+    &:hover {
+        background: $blue;
+        color: #fff;
+    }
+
+    &:active {
+        background: darken($blue, 15%);
+        border-color: darken($blue, 15%);
+        color: #fff;
+    }
+}
+
+.pre span {
+    font-family: monospace;
+    display: inline;
+    padding: 0.025rem 0.2rem;
+    margin: -0.025rem -0.1rem;
+    background: rgba($border, 0.25);
+    border: 1px solid rgba($border, 0.5);
+    border-radius: 0.25rem;
+}
+
+.error {
+    margin: 1rem 0;
+    color: $red;
+    font-weight: 600;
+}
+
+.is-border {
+    border-top: 1px solid $border;
+    margin-top: 1rem;
+}
+
+.description {
+    padding: 1rem 0 0;
+    text-align: center;
+}

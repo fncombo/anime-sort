@@ -1,0 +1,48 @@
+@import '_base.scss';
+
+.comparison-row {
+    display: flex;
+    width: 100%;
+}
+
+.comparison-col {
+    display: flex;
+    flex: 0 0 50%;
+    justify-content: center;
+    align-items: center;
+
+    &.is-normal {
+        display: block;
+        text-align: center;
+    }
+}
+
+.comparison-button {
+    margin: 2.5rem 0;
+    cursor: pointer;
+    transition: transform $duration $easing;
+
+    &:hover {
+        transform: scale(1.15);
+    }
+}
+
+.progress-container {
+    width: 50%;
+    margin: 1rem auto 0;
+    text-align: center;
+}
+
+.progress {
+    background: $border;
+    width: 300px;
+    height: 0.5rem;
+    margin: 0 auto 0.5rem;
+    border-radius: 0.25rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    background: $blue;
+    height: 0.5rem;
+}
