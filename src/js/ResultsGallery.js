@@ -1,6 +1,9 @@
 // React
 import React, { useContext } from 'react'
 
+// Libraries
+import { saveAs } from 'file-saver'
+
 // Helpers
 import { GlobalState } from './State'
 
@@ -12,6 +15,7 @@ import '../scss/ResultsGallery.scss'
  */
 function ResultsGallery() {
     const { state: {
+        username,
         animeObject,
         anime,
         totalInitialPairs,
@@ -22,6 +26,38 @@ function ResultsGallery() {
 
     const allAnime = Object.entries(anime)
 
+    // Callback to export all data as a JSON file
+    const exportData = () => {
+        // File name and type
+        const fileName = `${username}-animesort-export.json`
+        const fileType = 'application/json;charset=utf-8'
+
+        // Make an object of all anime which also includes the anime title
+        const exportAnime = allAnime.reduce((object, [ id, data ]) => {
+            object[id] = {
+                title: animeObject[id].title,
+                ...data,
+            }
+
+            return object
+        }, {})
+
+        // All the data to save
+        const data = JSON.stringify({
+            username,
+            anime: exportAnime,
+            totalInitialPairs,
+            manuallyEliminatedCount,
+            autoEliminatedCountA,
+            autoEliminatedCountB,
+        })
+
+        // Save it
+        const blob = new Blob([data], { type: fileType })
+
+        saveAs(blob, fileName)
+    }
+
     return (
         <>
             <div className="container is-column">
@@ -29,6 +65,7 @@ function ResultsGallery() {
                 <p><strong>Comparison decisions you've made:</strong> {manuallyEliminatedCount.toLocaleString()}</p>
                 <p><strong>Automatic decisions made:</strong> {(autoEliminatedCountA + autoEliminatedCountB).toLocaleString()}</p>
                 <p><strong>Total pairs of anime compared:</strong> {totalInitialPairs.toLocaleString()}</p>
+                <button className="gallery-export" onClick={exportData}>Export data as JSON</button>
             </div>
             <div className="gallery">
                 {allAnime.sort(([ , { elo: aElo} ], [ , { elo: bElo } ]) => {
