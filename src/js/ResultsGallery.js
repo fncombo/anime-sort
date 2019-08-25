@@ -42,7 +42,6 @@ function ResultsGallery() {
 
             object[id] = {
                 title: animeObject[id].title,
-                id,
                 elo,
                 wonAgainst,
                 lostTo,
