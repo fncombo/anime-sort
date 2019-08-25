@@ -33,10 +33,19 @@ function ResultsGallery() {
         const fileType = 'application/json;charset=utf-8'
 
         // Make an object of all anime which also includes the anime title
-        const exportAnime = allAnime.reduce((object, [ id, data ]) => {
+        const exportAnime = allAnime.reduce((object, [ id, { elo, wonAgainst, lostTo } ]) => {
+            // Anime for any reason not found in the anime object, maybe because it was imported with the wrong ID
+            // or removed from the users list after this was exported
+            if (!animeObject.hasOwnProperty(id)) {
+                return object
+            }
+
             object[id] = {
                 title: animeObject[id].title,
-                ...data,
+                id,
+                elo,
+                wonAgainst,
+                lostTo,
             }
 
             return object
@@ -70,9 +79,11 @@ function ResultsGallery() {
             <div className="gallery">
                 {allAnime.sort(([ , { elo: aElo} ], [ , { elo: bElo } ]) => {
                     return bElo - aElo
-                }).map(([ id, { elo, wonAgainst, lostTo } ], index) =>
+                }).map(([ id, { title = false, elo, wonAgainst, lostTo } ], index) =>
                     <GalleryItem
-                        anime={animeObject[id]}
+                        anime={animeObject.hasOwnProperty(id) ? animeObject[id] : false}
+                        id={id}
+                        title={title}
                         index={index}
                         elo={elo}
                         wonAgainst={wonAgainst.length}
@@ -88,7 +99,21 @@ function ResultsGallery() {
 /**
  * Single anime in the gallery.
  */
-function GalleryItem({ anime, index, elo, wonAgainst, lostTo }) {
+function GalleryItem({ anime, title, id, index, elo, wonAgainst, lostTo }) {
+    const { state: { username } } = useContext(GlobalState)
+
+    // Anime for any reason not found in the anime object, maybe because it was imported with the wrong ID
+    // or removed from the users list after this was exported
+    if (!anime) {
+        return (
+            <div className="gallery-item">
+                {title
+                    ? <p>Anime "{title}" wasn't found in {username}'s anime list.</p>
+                    : <p>Anime with the ID "{id}" wasn't found in {username}'s anime list.</p>}
+            </div>
+        )
+    }
+
     return (
         <div className="gallery-item">
             <img src={anime.image_url} height={225} width={150} alt={anime.title} />

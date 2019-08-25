@@ -18,6 +18,8 @@ const ACTIONS = {
     UPDATE_USERNAME: Symbol(),
     GET_PAIR: Symbol(),
     UPDATE_PAIR: Symbol(),
+    IMPORT_DONE: Symbol(),
+    IMPORT_ERROR: Symbol(),
 }
 
 Object.freeze(ACTIONS)
@@ -30,6 +32,8 @@ const initialState = {
     isErrorLoading: false,
     isComparing: false,
     isFinishedComparing: false,
+    isImportFinished: false,
+    isImportError: false,
     animeObject: [],
     anime: {},
     totalInitialPairs: 0,
@@ -70,6 +74,17 @@ function reducer(state, action) {
 
             return object
         }, {})
+
+        // If this was loading as part of an import, skip straight to the gallery
+        if (state.isImportFinished) {
+            return {
+                ...state,
+                animeObject,
+                isLoading: false,
+                isFinishedLoading: true,
+                isFinishedComparing: true,
+            }
+        }
 
         // Create an object for each anime ID which contains its Elo (default starting at 1600),
         // and arrays of other anime it won against and lost to
@@ -148,6 +163,26 @@ function reducer(state, action) {
             autoEliminatedCountB: state.autoEliminatedCountB + autoEliminatedCountB,
         }
     }
+
+    case ACTIONS.IMPORT_DONE: {
+        return {
+            ...state,
+            username: action.importData.username,
+            anime: action.importData.anime,
+            isLoading: true,
+            isImportFinished: true,
+            totalInitialPairs: action.importData.totalInitialPairs,
+            manuallyEliminatedCount: action.importData.manuallyEliminatedCount,
+            autoEliminatedCountA: action.importData.autoEliminatedCountA,
+            autoEliminatedCountB: action.importData.autoEliminatedCountB,
+        }
+    }
+
+    case ACTIONS.IMPORT_ERROR:
+        return {
+            ...state,
+            isImportError: true,
+        }
 
     default:
         return state

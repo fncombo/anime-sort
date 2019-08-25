@@ -3,7 +3,7 @@ import React, { useReducer, useEffect } from 'react'
 
 // Helpers
 import { GlobalState, ACTIONS, initialState, reducer } from './State'
-import getAnimeList from './Fetch'
+import { getAnimeList, validateImportData } from './Fetch'
 
 // Components
 import { CompareAnime } from './Comparing'
@@ -20,19 +20,6 @@ window.onbeforeunload = () => true
  */
 function App() {
     const [ state, dispatch ] = useReducer(reducer, initialState)
-
-    // Update username on typing
-    const onUsernameChange = ({ target: { value: username } }) => {
-        dispatch({
-            type: ACTIONS.UPDATE_USERNAME,
-            username,
-        })
-    }
-
-    // Get data for this username
-    const onSubmitUsername = () => {
-        dispatch({ type: ACTIONS.START_LOADING })
-    }
 
     useEffect(() => {
         // Only fetch data when loading
@@ -87,16 +74,68 @@ function App() {
         )
     }
 
+    // Update username on typing
+    const onUsernameChange = ({ target: { value: username } }) => {
+        dispatch({
+            type: ACTIONS.UPDATE_USERNAME,
+            username,
+        })
+    }
+
+    // Get data for this username
+    const onSubmitUsername = () => {
+        dispatch({ type: ACTIONS.START_LOADING })
+    }
+
+    // Import a file
+    const onImport = file => {
+        // Attempt to read the file as JSON
+        const fileReader = new FileReader()
+
+        fileReader.onloadend = () => {
+            try {
+                const importData = JSON.parse(fileReader.result)
+
+                // JSON parsed, now make sure the data inside is correct
+                if (!validateImportData(importData)) {
+                    dispatch({ type: ACTIONS.IMPORT_ERROR })
+                    return
+                }
+
+                dispatch({
+                    type: ACTIONS.IMPORT_DONE,
+                    importData,
+                })
+            } catch (error) {
+                dispatch({ type: ACTIONS.IMPORT_ERROR })
+            }
+        }
+
+        // Any file reading error
+        fileReader.onerror = () => {
+            dispatch({ type: ACTIONS.IMPORT_ERROR })
+        }
+
+        // Read as text
+        fileReader.readAsText(file)
+    }
+
     // Initial view to enter MAL username
     return (
         <>
             <div className="container is-column">
                 <p>Anime Sort</p>
                 <h1>Enter your MyAnimeList username</h1>
-                {state.isErrorLoading && <p className="error">An error occurred while loading {state.username}'s anime list.</p>}
+                {state.isErrorLoading && <p className="error">Could not load {state.username}'s anime list.</p>}
+                {state.isImportError && <p className="error">Could not import the previous sort.</p>}
                 <form onSubmit={onSubmitUsername}>
-                    <input type="text" onChange={onUsernameChange} value={state.username} />
-                    <button disabled={!state.username.length} type="submit">Start!</button>
+                    <div>
+                        <input type="text" onChange={onUsernameChange} value={state.username} />
+                        <button disabled={!state.username.length} type="submit">Start!</button>
+                    </div>
+                    <div className="or">or</div>
+                    <label htmlFor="import" className="button">Import previous sort</label>
+                    <input type="file" id="import" accept="application/json" onChange={event => onImport(event.target.files[0])} />
                 </form>
             </div>
             <div className="container is-column is-border description">

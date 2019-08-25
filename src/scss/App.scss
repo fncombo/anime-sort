@@ -87,13 +87,14 @@ strong {
 
 form {
     display: flex;
+    margin: 1rem 0;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
 input {
-    margin: 1rem 0;
+    margin: 0 1rem 0 0;
     padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
     border: 1px solid $border;
@@ -106,9 +107,14 @@ input {
     &:focus {
         border-color: $border-active;
     }
+
+    &[type="file"] {
+        display: none;
+    }
 }
 
-button {
+button,
+.button {
     background: #fff;
     padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
@@ -135,6 +141,25 @@ button {
     }
 }
 
+.or {
+    display: flex;
+    margin: 0.5rem 0;
+    justify-content: center;
+    align-items: center;
+    font-variant: small-caps;
+    font-size: 1.25rem;
+
+    &::before,
+    &::after {
+        content: '';
+        background: $border;
+        display: block;
+        width: 5rem;
+        height: 1px;
+        margin: 0 1rem;
+    }
+}
+
 .pre span {
     font-family: monospace;
     display: inline;
@@ -149,6 +174,10 @@ button {
     margin: 1rem 0;
     color: $red;
     font-weight: 600;
+
+    & + .error {
+        margin-top: -0.75rem;
+    }
 }
 
 .is-border {

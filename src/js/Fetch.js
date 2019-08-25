@@ -60,4 +60,73 @@ async function getAnimeList(username, page = 1, isRetry = false) {
     return apiData
 }
 
-export default getAnimeList
+/**
+ * Validates that the imported data is correct.
+ */
+function validateImportData(importData) {
+    // Check for all required properties and make sure they are the right type
+    if (!importData.hasOwnProperty('username') || typeof importData.username !== 'string') {
+        return
+    }
+
+    if (!importData.hasOwnProperty('anime') || typeof importData.anime !== 'object') {
+        return
+    }
+
+    if (!importData.hasOwnProperty('totalInitialPairs') || typeof importData.totalInitialPairs !== 'number') {
+        return
+    }
+
+    if (!importData.hasOwnProperty('manuallyEliminatedCount') || typeof importData.manuallyEliminatedCount !== 'number') {
+        return
+    }
+
+    if (!importData.hasOwnProperty('autoEliminatedCountA') || typeof importData.autoEliminatedCountA !== 'number') {
+        return
+    }
+
+    if (!importData.hasOwnProperty('autoEliminatedCountB') || typeof importData.autoEliminatedCountB !== 'number') {
+        return
+    }
+
+    // Regex to simply match anime ID which is all numbers
+    const number = /^\d+$/
+
+    const anime = Object.entries(importData.anime)
+
+    // Check for empty anime object
+    if (!anime.length) {
+        return false
+    }
+
+    // Make sure the anime array is correct
+    return anime.every(([ id, data ]) => {
+        if (!number.test(id)) {
+            return false
+        }
+
+        if (!data.hasOwnProperty('elo') || typeof data.elo !== 'number') {
+            return false
+        }
+
+        if (!data.hasOwnProperty('wonAgainst') || !Array.isArray(data.wonAgainst)) {
+            return false
+        }
+
+        if (!data.hasOwnProperty('lostTo') || !Array.isArray(data.lostTo)) {
+            return false
+        }
+
+        // Make sure won and lost are arrays of numbers
+        const wonAgainstValid = data.wonAgainst.every(id => typeof id === 'number')
+        const lostToValid = data.lostTo.every(id => typeof id === 'number')
+
+        return wonAgainstValid && lostToValid
+    })
+}
+
+// Exports
+export {
+    getAnimeList,
+    validateImportData,
+}
