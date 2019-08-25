@@ -130,7 +130,7 @@ function CompareAnime() {
                         <p><strong>Total completed anime to sort:</strong> {allAnime.length}</p>
                         <p><strong>Sorting progress:</strong> {progress.toFixed(2)}%</p>
                         <div className="progress">
-                            <div className="progress-bar" style={{ width: `${progress}%` }}></div>
+                            <div className="progress-bar" style={{ width: `${progress.toLocaleString()}%` }}></div>
                         </div>
                         <p><strong>Comparison decisions you've made:</strong> {manuallyEliminatedCount.toLocaleString()}</p>
                         <p><strong>Automatic decisions made:</strong> {(autoEliminatedCountA + autoEliminatedCountB).toLocaleString()}</p>
