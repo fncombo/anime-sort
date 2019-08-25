@@ -55,6 +55,15 @@ function reducer(state, action) {
         // Filter to only include completed anime
         apiData = shuffleArray(apiData.filter(({ watching_status }) => watching_status === 2))
 
+        // Too few anime to compare
+        if (apiData.length < 2) {
+            return {
+                ...state,
+                isLoading: false,
+                isErrorLoading: true,
+            }
+        }
+
         // Make an object of all anime to easily access them by ID
         const animeObject = apiData.reduce((object, cartoon) => {
             object[cartoon.mal_id] = cartoon
