@@ -7,6 +7,17 @@ import { GlobalState, ACTIONS } from './State'
 // Style
 import '../scss/Comparing.scss'
 
+// Anime type descriptions
+const typeLookup = {
+    1: 'TV',
+    2: 'OVA',
+    3: 'Movie',
+    4: 'Special',
+    5: 'ONA',
+    6: 'Music',
+    7: 'Other',
+}
+
 /**
  * UI to compare two anime against each other.
  */
@@ -114,6 +125,7 @@ function CompareAnime() {
                 <div className="comparison-row">
                     <div className="comparison-col is-normal">
                         <p><strong>Your rating on MyAnimeList:</strong> {left.score}</p>
+                        <p><strong>Type:</strong> {left.type}{left.total_episodes > 1 ? <> &ndash; {left.total_episodes} episodes</> : ''}</p>
                         <p>
                             <a href={left.url} target="_blank" rel="noopener noreferrer">
                                 Open on MyAnimeList
@@ -122,6 +134,7 @@ function CompareAnime() {
                     </div>
                     <div className="comparison-col is-normal">
                         <p><strong>Your rating on MyAnimeList:</strong> {right.score}</p>
+                        <p><strong>Type:</strong> {right.type}{right.total_episodes > 1 ? <> &ndash; {right.total_episodes} episodes</> : ''}</p>
                         <p>
                             <a href={right.url} target="_blank" rel="noopener noreferrer">
                                 Open on MyAnimeList
