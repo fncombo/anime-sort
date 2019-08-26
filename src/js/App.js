@@ -157,7 +157,7 @@ function App() {
                     It should take you about 5 to 15 minutes to do if you have up to 100 completed anime, 20 to 30 minutes if you have up to 200 anime, and over 30 minutes if you have over 200 anime.
                 </p>
                 <p>
-                    View source code on <a href="https://github.com/fncombo/animesort" target="_blank" rel="noopener noreferrer">GitHub</a>.
+                    View source code on <a href="https://github.com/fncombo/anime-sort" target="_blank" rel="noopener noreferrer">GitHub</a>.
                     API data powered by <a href="https://jikan.moe/" target="_blank" rel="noopener noreferrer">Jikan API</a>, thanks!
                 </p>
             </div>
