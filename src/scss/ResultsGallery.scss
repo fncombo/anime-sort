@@ -2,7 +2,16 @@
 
 .gallery-section {
     &.is-border {
-        padding-top: 1rem;
+        border: none;
+
+        &::before {
+            content: '';
+            background: $border;
+            display: block;
+            width: calc(100% - 4rem);
+            height: 1px;
+            margin: 0 auto 2rem;
+        }
     }
 
     h2 {
