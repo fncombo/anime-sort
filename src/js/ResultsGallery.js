@@ -18,6 +18,7 @@ function ResultsGallery() {
         username,
         animeObject,
         anime,
+        isImportFinished,
         totalInitialPairs,
         manuallyEliminatedCount,
         autoEliminatedCountA,
@@ -80,8 +81,8 @@ function ResultsGallery() {
     return (
         <>
             <div className="container is-column">
-                <h1>Here is your sorted anime, enjoy!</h1>
-                <p><strong>Comparison decisions you've made:</strong> {manuallyEliminatedCount.toLocaleString()}</p>
+                <h1>Here is {isImportFinished ? `${username}'s` : 'your'} sorted anime, enjoy!</h1>
+                <p><strong>Comparison decisions {isImportFinished ? `${username}` : 'you\'ve'} made:</strong> {manuallyEliminatedCount.toLocaleString()}</p>
                 <p><strong>Automatic decisions made:</strong> {(autoEliminatedCountA + autoEliminatedCountB).toLocaleString()}</p>
                 <p><strong>Total pairs of anime compared:</strong> {totalInitialPairs.toLocaleString()}</p>
                 <p><strong>Sorting completed on:</strong> {completedString}</p>
