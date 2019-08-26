@@ -39,6 +39,9 @@ function CompareAnime() {
     }
 
     useEffect(() => {
+        // Browser confirm prompt before closing tab, don't want to lose progress by accident!
+        window.onbeforeunload = () => true
+
         const keyHandler = ({ key }) => {
             if (key === 'ArrowLeft') {
                 dispatch({

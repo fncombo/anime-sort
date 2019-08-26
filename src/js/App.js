@@ -12,9 +12,6 @@ import { ResultsGallery } from './ResultsGallery'
 // Style
 import '../scss/App.scss'
 
-// Browser confirm prompt before closing tab, don't want to lose progress by accident!
-window.onbeforeunload = () => true
-
 /**
  * ZA WARUDO
  */
