@@ -22,9 +22,19 @@ function ResultsGallery() {
         manuallyEliminatedCount,
         autoEliminatedCountA,
         autoEliminatedCountB,
+        completedTimestamp,
     } } = useContext(GlobalState)
 
     const allAnime = Object.entries(anime)
+
+    const completedString = new Intl.DateTimeFormat('en-GB', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+    }).format(completedTimestamp)
 
     // Callback to export all data as a JSON file
     const exportData = () => {
@@ -58,6 +68,7 @@ function ResultsGallery() {
             manuallyEliminatedCount,
             autoEliminatedCountA,
             autoEliminatedCountB,
+            completedTimestamp,
         })
 
         // Save it
@@ -73,6 +84,7 @@ function ResultsGallery() {
                 <p><strong>Comparison decisions you've made:</strong> {manuallyEliminatedCount.toLocaleString()}</p>
                 <p><strong>Automatic decisions made:</strong> {(autoEliminatedCountA + autoEliminatedCountB).toLocaleString()}</p>
                 <p><strong>Total pairs of anime compared:</strong> {totalInitialPairs.toLocaleString()}</p>
+                <p><strong>Sorting completed on:</strong> {completedString}</p>
                 <button className="gallery-export" onClick={exportData}>Export data as JSON</button>
             </div>
             <div className="gallery">

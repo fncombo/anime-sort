@@ -89,6 +89,10 @@ function validateImportData(importData) {
         return
     }
 
+    if (!importData.hasOwnProperty('completedTimestamp') || typeof importData.completedTimestamp !== 'number') {
+        return
+    }
+
     // Regex to simply match anime ID which is all numbers
     const number = /^\d+$/
 

@@ -132,12 +132,14 @@ function reducer(state, action) {
         // Get the total remaining number of pairs, and a new random pair for comparison
         const [ totalRemainingPairs, currentPair ] = getComparisonPairs(state.anime)
 
+        // All comparisons finished, display gallery
         if (!totalRemainingPairs) {
             return {
                 ...state,
                 isFinishedComparing: true,
                 totalRemainingPairs,
                 currentPair,
+                completedTimestamp: Date.now(),
             }
         }
 
@@ -175,6 +177,7 @@ function reducer(state, action) {
             manuallyEliminatedCount: action.importData.manuallyEliminatedCount,
             autoEliminatedCountA: action.importData.autoEliminatedCountA,
             autoEliminatedCountB: action.importData.autoEliminatedCountB,
+            completedTimestamp: action.importData.completedTimestamp,
         }
     }
 
