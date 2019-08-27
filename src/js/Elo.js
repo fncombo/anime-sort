@@ -1,4 +1,5 @@
 // Libraries
+import clone from 'clone'
 import shuffleArray from 'shuffle-array'
 
 // Factor used in the Elo formula
@@ -9,7 +10,7 @@ const kFactor = 32
  */
 function compare(allAnime, winnerId, loserId) {
     // Make a copy of all anime to not affect state
-    const anime = { ...allAnime }
+    const anime = clone(allAnime, false)
 
     // Count of how many anime were auto-eliminated
     let autoEliminatedCountA = 0
@@ -84,12 +85,12 @@ function compare(allAnime, winnerId, loserId) {
 /**
  * Returns the total numbers of pairs remaining and a random pair for comparison.
  */
-function getComparisonPairs(allAnime) {
+function getComparisonPairs(anime) {
     // Array of all possible pairs
     const pairs = []
 
     // Array of all anime IDs
-    const animeIds = Object.keys(allAnime)
+    const animeIds = Object.keys(anime)
 
     // Cache total number of anime IDs to loop through
     const total = animeIds.length
@@ -103,7 +104,7 @@ function getComparisonPairs(allAnime) {
             const innerAnimeId = parseInt(animeIds[j], 10)
 
             // Object of the outer anime
-            const outerAnime = allAnime[outerAnimeId]
+            const outerAnime = anime[outerAnimeId]
 
             // Don't include this pair if they've already been compared
             if (outerAnime.wonAgainst.includes(innerAnimeId) || outerAnime.lostTo.includes(innerAnimeId)) {
