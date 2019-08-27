@@ -69,7 +69,7 @@ function reducer(state, action) {
         let { apiData } = action
 
         // Filter to only include completed anime
-        apiData = apiData.filter(({ watching_status }) => watching_status === 2).slice(0, 3)
+        apiData = apiData.filter(({ watching_status }) => watching_status === 2)
 
         // Too few anime to compare
         if (apiData.length < 2) {
