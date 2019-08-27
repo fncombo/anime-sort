@@ -1,5 +1,14 @@
 @import '_base.scss';
 
+.comparison-subtitle {
+    border-bottom: 1px solid $border;
+}
+
+.comparison-stage {
+    width: 100%;
+    min-height: 566px;
+}
+
 .comparison-row {
     display: flex;
     width: 100%;
@@ -10,6 +19,14 @@
     flex: 0 0 50%;
     justify-content: center;
     align-items: center;
+    opacity: 1;
+    transform: scale(1);
+    transition: all $duration $easing;
+
+    .is-changing & {
+        opacity: 0;
+        transform: scale(0.85);
+    }
 
     &.is-normal {
         display: block;
