@@ -2,7 +2,7 @@
 import { createContext } from 'react'
 
 // Libraries
-import shuffleArray from 'shuffle-array'
+import clone from 'clone'
 
 // Helpers
 import { compare, getComparisonPairs } from './Elo'
@@ -18,8 +18,12 @@ const ACTIONS = {
     UPDATE_USERNAME: Symbol(),
     GET_PAIR: Symbol(),
     UPDATE_PAIR: Symbol(),
+    UNDO_PAIR: Symbol(),
     IMPORT_DONE: Symbol(),
     IMPORT_ERROR: Symbol(),
+    SAVE_STATE: Symbol(),
+    RESTORE_STATE: Symbol(),
+    DELETE_SAVE_STATE: Symbol(),
 }
 
 Object.freeze(ACTIONS)
@@ -34,7 +38,8 @@ const initialState = {
     isFinishedComparing: false,
     isImportFinished: false,
     isImportError: false,
-    animeObject: [],
+    isSaved: false,
+    animeObject: {},
     anime: {},
     totalInitialPairs: 0,
     totalRemainingPairs: 0,
@@ -42,22 +47,29 @@ const initialState = {
     autoEliminatedCountA: 0,
     autoEliminatedCountB: 0,
     currentPair: [],
+    previousState: false,
 }
 
 // Reducer to handle all actions
 function reducer(state, action) {
     switch (action.type) {
+    /**
+     * Set the state to loading to trigger the load of Jikan API.
+     */
     case ACTIONS.START_LOADING:
         return {
             ...state,
             isLoading: true,
         }
 
+    /**
+     * Loading has finished, process the API data and start comparing or show the gallery if importing.
+     */
     case ACTIONS.FINISH_LOADING: {
         let { apiData } = action
 
         // Filter to only include completed anime
-        apiData = shuffleArray(apiData.filter(({ watching_status }) => watching_status === 2))
+        apiData = apiData.filter(({ watching_status }) => watching_status === 2).slice(0, 3)
 
         // Too few anime to compare
         if (apiData.length < 2) {
@@ -69,8 +81,8 @@ function reducer(state, action) {
         }
 
         // Make an object of all anime to easily access them by ID
-        const animeObject = apiData.reduce((object, cartoon) => {
-            object[cartoon.mal_id] = cartoon
+        const animeObject = apiData.reduce((object, anime) => {
+            object[anime.mal_id] = anime
 
             return object
         }, {})
@@ -114,6 +126,9 @@ function reducer(state, action) {
         }
     }
 
+    /**
+     * Any error during loading displays a generic error message.
+     */
     case ACTIONS.ERROR_LOADING:
         return {
             ...state,
@@ -121,6 +136,9 @@ function reducer(state, action) {
             isErrorLoading: true,
         }
 
+    /**
+     * Update username while typing.
+     */
     case ACTIONS.UPDATE_USERNAME:
         return {
             ...state,
@@ -128,6 +146,10 @@ function reducer(state, action) {
             isErrorLoading: false,
         }
 
+    /**
+     * Get a random pair of anime for comparison, as well as the number of total pairs remaining to be compared.
+     * If there are no more pairs to compare, display the final gallery of sorted anime.
+     */
     case ACTIONS.GET_PAIR: {
         // Get the total remaining number of pairs, and a new random pair for comparison
         const [ totalRemainingPairs, currentPair ] = getComparisonPairs(state.anime)
@@ -152,21 +174,58 @@ function reducer(state, action) {
         }
     }
 
+    /**
+     * Update a pair of anime, where one is the winner and the other is the loser.
+     * Also, save a copy of some of the previous state data to be able to undo this action.
+     */
     case ACTIONS.UPDATE_PAIR: {
+        // Run the Elo algorithm
         const [ anime, autoEliminatedCountA, autoEliminatedCountB ] = compare(state.anime, action.winnerId, action.loserId)
+
+        // Make a copy of some of the previous state data for undo
+        const previousState = {
+            anime: clone(state.anime),
+            totalRemainingPairs: clone(state.totalRemainingPairs),
+            currentPair: clone(state.currentPair),
+            manuallyEliminatedCount: clone(state.manuallyEliminatedCount),
+            autoEliminatedCountA: clone(state.autoEliminatedCountA),
+            autoEliminatedCountB: clone(state.autoEliminatedCountB),
+        }
 
         // Set that nothing is being compared to trigger getting the next comparison
         return {
             ...state,
             anime,
             isComparing: false,
+            isSaved: false,
             manuallyEliminatedCount: state.manuallyEliminatedCount + 1,
             autoEliminatedCountA: state.autoEliminatedCountA + autoEliminatedCountA,
             autoEliminatedCountB: state.autoEliminatedCountB + autoEliminatedCountB,
+            previousState,
         }
     }
 
-    case ACTIONS.IMPORT_DONE: {
+    /**
+     * Undo a single comparison of the last pair of anime if there is previous state history.
+     */
+    case ACTIONS.UNDO_PAIR:
+        return {
+            ...state,
+            anime: clone(state.previousState.anime),
+            isComparing: true,
+            isSaved: false,
+            totalRemainingPairs: clone(state.previousState.totalRemainingPairs),
+            currentPair: clone(state.previousState.currentPair),
+            manuallyEliminatedCount: clone(state.previousState.manuallyEliminatedCount),
+            autoEliminatedCountA: clone(state.previousState.autoEliminatedCountA),
+            autoEliminatedCountB: clone(state.previousState.autoEliminatedCountB),
+            previousState: false,
+        }
+
+    /**
+     * Reading import file is done, assign the data to the state and start loading the API data.
+     */
+    case ACTIONS.IMPORT_DONE:
         return {
             ...state,
             username: action.importData.username,
@@ -179,14 +238,52 @@ function reducer(state, action) {
             autoEliminatedCountB: action.importData.autoEliminatedCountB,
             completedTimestamp: action.importData.completedTimestamp,
         }
-    }
 
+    /**
+     * Any error during import displays a generic error mesage.
+     */
     case ACTIONS.IMPORT_ERROR:
         return {
             ...state,
             isImportError: true,
         }
 
+    /**
+     * Save the current state to be able to restore it later.
+     */
+    case ACTIONS.SAVE_STATE: {
+        localStorage.setItem('savedState', JSON.stringify(state))
+
+        return {
+            ...state,
+            isSaved: true,
+        }
+    }
+
+    /**
+     * Completely restore a previously saved state to continue sorting.
+     */
+    case ACTIONS.RESTORE_STATE: {
+        const savedState = JSON.parse(localStorage.getItem('savedState'))
+
+        return {
+            ...savedState,
+            isSaved: true,
+        }
+    }
+
+    /**
+     * Delete any previously saved state data.
+     */
+    case ACTIONS.DELETE_SAVE_STATE: {
+        localStorage.clear()
+
+        return state
+    }
+
+    /**
+     * No action?
+     */
     default:
         return state
     }

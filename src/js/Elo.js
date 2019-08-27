@@ -1,4 +1,5 @@
 // Libraries
+import clone from 'clone'
 import shuffleArray from 'shuffle-array'
 
 // Factor used in the Elo formula
@@ -9,7 +10,7 @@ const kFactor = 32
  */
 function compare(allAnime, winnerId, loserId) {
     // Make a copy of all anime to not affect state
-    const anime = { ...allAnime }
+    const anime = clone(allAnime, false)
 
     // Count of how many anime were auto-eliminated
     let autoEliminatedCountA = 0

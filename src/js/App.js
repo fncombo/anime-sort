@@ -1,5 +1,5 @@
 // React
-import React, { useReducer, useEffect } from 'react'
+import React, { useReducer, useState, useEffect } from 'react'
 
 // Helpers
 import { GlobalState, ACTIONS, initialState, reducer } from './State'
@@ -17,6 +17,7 @@ import '../scss/App.scss'
  */
 function App() {
     const [ state, dispatch ] = useReducer(reducer, initialState)
+    const [ hasSavedState, setHasSavedState ] = useState(localStorage.getItem('savedState') !== null)
 
     useEffect(() => {
         // Only fetch data when loading
@@ -117,6 +118,20 @@ function App() {
         fileReader.readAsText(file)
     }
 
+    // Completely restore a previously saved state
+    const restoreSave = () => {
+        dispatch({ type: ACTIONS.RESTORE_STATE })
+    }
+
+    // Delete a previously saved state
+    const deleteSave = () => {
+        if (window.confirm('Are you sure? This action cannot be reversed.')) {
+            setHasSavedState(false)
+
+            dispatch({ type: ACTIONS.DELETE_SAVE_STATE })
+        }
+    }
+
     // Initial view to enter MAL username
     return (
         <>
@@ -131,8 +146,16 @@ function App() {
                         <button disabled={!state.username.length} type="submit">Start!</button>
                     </div>
                     <div className="or">or</div>
-                    <label htmlFor="import" className="button">Import previous sort</label>
-                    <input type="file" id="import" accept="application/json" onChange={({ target: { files: [ file ] } }) => onImport(file)} />
+                    <div className="import-restore">
+                        <label htmlFor="import" className="button">Import previous sort</label>
+                        <input type="file" id="import" accept="application/json" onChange={({ target: { files: [ file ] } }) => onImport(file)} />
+                        {hasSavedState &&
+                            <>
+                                <button onClick={restoreSave} type="button">Restore saved progress</button>
+                                <button onClick={deleteSave} type="button">Delete saved progress</button>
+                            </>
+                        }
+                    </div>
                 </form>
             </div>
             <div className="container is-column is-border description">

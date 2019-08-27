@@ -25,6 +25,7 @@ function CompareAnime() {
     const {
         state: {
             isComparing,
+            isSaved,
             animeObject,
             anime,
             totalInitialPairs,
@@ -36,6 +37,7 @@ function CompareAnime() {
                 leftId,
                 rightId,
             ] = [ false, false ],
+            previousState,
         },
         dispatch,
     } = useContext(GlobalState)
@@ -49,9 +51,24 @@ function CompareAnime() {
         })
     }
 
+    // Undo previous selection and return to it, enabling to change the answer
+    const undo = () => {
+        dispatch({ type: ACTIONS.UNDO_PAIR })
+    }
+
+    // Save the current state so it can be restored later
+    const save = () => {
+        window.onbeforeunload = () => {}
+
+        dispatch({ type: ACTIONS.SAVE_STATE })
+    }
+
     useEffect(() => {
         // Browser confirm prompt before closing tab, don't want to lose progress by accident!
-        window.onbeforeunload = () => true
+        // Only trigger this if any progress has not been saved yet
+        if (!isSaved) {
+            window.onbeforeunload = () => true
+        }
 
         const keyHandler = ({ key }) => {
             if (key === 'ArrowLeft') {
@@ -143,8 +160,12 @@ function CompareAnime() {
                     </div>
                 </div>
             </div>
-            <div className="container">
-                <div className="comparison-row is-border">
+            <div className="container is-column">
+                <div className="comparison-buttons is-border">
+                    {previousState && <button onClick={undo}>Undo last comparison</button>}
+                    {!isSaved && <button onClick={save}>Save progress</button>}
+                </div>
+                <div className="comparison-row ">
                     <div className="progress-container">
                         <p><strong>Total completed anime to sort:</strong> {allAnime.length}</p>
                         <p><strong>Sorting progress:</strong> {progress.toFixed(2).toLocaleString()}%</p>

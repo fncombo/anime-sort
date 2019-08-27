@@ -82,7 +82,7 @@ h3 {
 }
 
 p {
-    margin: 0 0 0.5rem;
+    margin: 0 0 0.25rem;
 }
 
 strong {
@@ -91,17 +91,19 @@ strong {
 
 form {
     display: flex;
-    margin: 1rem 0;
+    margin: 1rem 0 0;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
 
 input {
+    height: 40px;
     margin: 0 1rem 0 0;
     padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
     border: 1px solid $border;
+    box-sizing: border-box;
     outline: none;
 
     &:hover {
@@ -120,12 +122,17 @@ input {
 button,
 .button {
     background: #fff;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
     padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
     border: 1px solid $blue;
     outline: none;
     color: $blue;
     cursor: pointer;
+    box-sizing: border-box;
     transition: all $duration $easing;
 
     &[disabled] {
@@ -161,6 +168,17 @@ button,
         width: 5rem;
         height: 1px;
         margin: 0 1rem;
+    }
+}
+
+.import-restore {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button,
+    .button {
+        margin: 0 0.5rem;
     }
 }
 

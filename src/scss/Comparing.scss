@@ -27,6 +27,18 @@
     }
 }
 
+.comparison-buttons {
+    display: flex;
+    width: 100%;
+    padding: 1rem 0 0;
+    justify-content: center;
+    align-items: center;
+
+    button {
+        margin: 0 0.5rem;
+    }
+}
+
 .progress-container {
     width: 50%;
     margin: 1rem auto 0;
@@ -37,7 +49,7 @@
     background: $border;
     width: 300px;
     height: 0.5rem;
-    margin: 0 auto 0.5rem;
+    margin: 0.5rem auto;
     border-radius: 0.25rem;
     overflow: hidden;
 }
