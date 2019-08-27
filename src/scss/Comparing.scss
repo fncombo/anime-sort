@@ -1,12 +1,7 @@
 @import '_base.scss';
 
-.comparison-subtitle {
-    border-bottom: 1px solid $border;
-}
-
 .comparison-stage {
     width: 100%;
-    min-height: 566px;
 }
 
 .comparison-row {
@@ -23,30 +18,49 @@
     transform: scale(1);
     transition: all $duration $easing;
 
-    .is-changing & {
+    .comparison-stage-enter & {
         opacity: 0;
-        transform: scale(0.85);
+        transform: scale(0.875);
+    }
+
+    .comparison-stage-enter-active &,
+    .comparison-stage-enter-done & {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .comparison-stage-exit & {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .comparison-stage-exit-active &,
+    .comparison-stage-exit-done & {
+        opacity: 0;
+        transform: scale(0.875);
     }
 
     &.is-normal {
         display: block;
+        margin: 1rem 0;
         text-align: center;
     }
 }
 
 .comparison-button {
-    margin: 2.5rem 0;
+    margin: 1rem 0;
     cursor: pointer;
     transition: transform $duration $easing;
 
     &:hover {
-        transform: scale(1.15);
+        transform: scale(1.125);
     }
 }
 
 .comparison-buttons {
     display: flex;
     width: 100%;
+    margin: 0 auto;
     padding: 1rem 0 0;
     justify-content: center;
     align-items: center;
@@ -74,4 +88,8 @@
 .progress-bar {
     background: $blue;
     height: 0.5rem;
+}
+
+.comparison-data-border {
+    border-top: 1px solid $border;
 }

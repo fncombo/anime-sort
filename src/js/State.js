@@ -34,7 +34,6 @@ const initialState = {
     isLoading: false,
     isFinishedLoading: false,
     isErrorLoading: false,
-    isComparing: false,
     isFinishedComparing: false,
     isImportFinished: false,
     isImportError: false,
@@ -48,6 +47,7 @@ const initialState = {
     autoEliminatedCountB: 0,
     currentPair: [],
     previousState: false,
+    completedTimestamp: false,
 }
 
 // Reducer to handle all actions
@@ -117,7 +117,6 @@ function reducer(state, action) {
             ...state,
             isLoading: false,
             isFinishedLoading: true,
-            isComparing: true,
             animeObject,
             anime,
             totalInitialPairs,
@@ -147,60 +146,40 @@ function reducer(state, action) {
         }
 
     /**
-     * Get a random pair of anime for comparison, as well as the number of total pairs remaining to be compared.
-     * If there are no more pairs to compare, display the final gallery of sorted anime.
-     */
-    case ACTIONS.GET_PAIR: {
-        // Get the total remaining number of pairs, and a new random pair for comparison
-        const [ totalRemainingPairs, currentPair ] = getComparisonPairs(state.anime)
-
-        // All comparisons finished, display gallery
-        if (!totalRemainingPairs) {
-            return {
-                ...state,
-                isFinishedComparing: true,
-                totalRemainingPairs,
-                currentPair,
-                completedTimestamp: Date.now(),
-            }
-        }
-
-        // Set that comparison is in progress to display the relevant UI
-        return {
-            ...state,
-            isComparing: true,
-            totalRemainingPairs,
-            currentPair,
-        }
-    }
-
-    /**
      * Update a pair of anime, where one is the winner and the other is the loser.
      * Also, save a copy of some of the previous state data to be able to undo this action.
+     * Then, get a random pair of anime for comparison, as well as the number of total pairs remaining to be compared.
+     * If there are no more pairs to compare, display the final gallery of sorted anime.
      */
     case ACTIONS.UPDATE_PAIR: {
         // Run the Elo algorithm
         const [ anime, autoEliminatedCountA, autoEliminatedCountB ] = compare(state.anime, action.winnerId, action.loserId)
 
+        // Get the total remaining number of pairs, and a new random pair for comparison
+        const [ totalRemainingPairs, currentPair ] = getComparisonPairs(anime)
+
         // Make a copy of some of the previous state data for undo
         const previousState = {
-            anime: clone(state.anime),
-            totalRemainingPairs: clone(state.totalRemainingPairs),
-            currentPair: clone(state.currentPair),
-            manuallyEliminatedCount: clone(state.manuallyEliminatedCount),
-            autoEliminatedCountA: clone(state.autoEliminatedCountA),
-            autoEliminatedCountB: clone(state.autoEliminatedCountB),
+            anime: clone(state.anime, false),
+            totalRemainingPairs: clone(state.totalRemainingPairs, false),
+            currentPair: clone(state.currentPair, false),
+            manuallyEliminatedCount: clone(state.manuallyEliminatedCount, false),
+            autoEliminatedCountA: clone(state.autoEliminatedCountA, false),
+            autoEliminatedCountB: clone(state.autoEliminatedCountB, false),
         }
 
-        // Set that nothing is being compared to trigger getting the next comparison
+        // Return the next comparison data or trigger to display the results gallery if no more pairs remain
         return {
             ...state,
             anime,
-            isComparing: false,
             isSaved: false,
+            isFinishedComparing: !totalRemainingPairs,
+            totalRemainingPairs,
+            currentPair,
             manuallyEliminatedCount: state.manuallyEliminatedCount + 1,
             autoEliminatedCountA: state.autoEliminatedCountA + autoEliminatedCountA,
             autoEliminatedCountB: state.autoEliminatedCountB + autoEliminatedCountB,
+            completedTimestamp: !totalRemainingPairs ? Date.now() : false,
             previousState,
         }
     }
@@ -211,14 +190,13 @@ function reducer(state, action) {
     case ACTIONS.UNDO_PAIR:
         return {
             ...state,
-            anime: clone(state.previousState.anime),
-            isComparing: true,
+            anime: clone(state.previousState.anime, false),
             isSaved: false,
-            totalRemainingPairs: clone(state.previousState.totalRemainingPairs),
-            currentPair: clone(state.previousState.currentPair),
-            manuallyEliminatedCount: clone(state.previousState.manuallyEliminatedCount),
-            autoEliminatedCountA: clone(state.previousState.autoEliminatedCountA),
-            autoEliminatedCountB: clone(state.previousState.autoEliminatedCountB),
+            totalRemainingPairs: clone(state.previousState.totalRemainingPairs, false),
+            currentPair: clone(state.previousState.currentPair, false),
+            manuallyEliminatedCount: clone(state.previousState.manuallyEliminatedCount, false),
+            autoEliminatedCountA: clone(state.previousState.autoEliminatedCountA, false),
+            autoEliminatedCountB: clone(state.previousState.autoEliminatedCountB, false),
             previousState: false,
         }
 
