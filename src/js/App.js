@@ -132,7 +132,7 @@ function App() {
                     </div>
                     <div className="or">or</div>
                     <label htmlFor="import" className="button">Import previous sort</label>
-                    <input type="file" id="import" accept="application/json" onChange={event => onImport(event.target.files[0])} />
+                    <input type="file" id="import" accept="application/json" onChange={({ target: { files: [ file ] } }) => onImport(file)} />
                 </form>
             </div>
             <div className="container is-column is-border description">
