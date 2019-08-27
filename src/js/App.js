@@ -143,11 +143,12 @@ function App() {
                 </p>
                 <p>
                     Due to the exponential nature of this sort, to significantly reduce the number of comparisons you need to manually make for very large sets of anime,
-                    losers of the loser automatically lose to the winner, similarly, winners against the winner win against the loser.
+                    losers of the loser will automatically lose to the winner, similarly, winners against the winner will automatically win against the loser. This can reduce the
+                    number of manual comparisons you need to make by up to 99.5%.
                 </p>
                 <p className="pre">
                     In other words, if you choose <span>Anime A</span> over <span>Anime B</span>, and choose <span>Anime B</span> over <span>Anime C</span>, then <span>Anime A</span> and
-                    all anime it lost to will automatically win against <span>Anime C</span> and and all anime it won against, thus eliminating the need for you to make these decisions manually.
+                    all anime that won against it will automatically win against <span>Anime C</span> and and all anime that lost to it, thus eliminating the need for you to make these decisions manually.
                 </p>
                 <p>
                     During sorting, you will see a significant increase in total sorting progress as you approach the middle, and it will slow down again towards the very end.
