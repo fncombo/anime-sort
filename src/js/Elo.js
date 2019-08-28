@@ -85,33 +85,34 @@ function compare(allAnime, winnerId, loserId) {
 /**
  * Returns the total numbers of pairs remaining and a random pair for comparison.
  */
-function getComparisonPairs(anime) {
+function getComparisonPairs(allAnime) {
+    // Make a copy of all anime to not affect state
+    const anime = Object.entries(clone(allAnime, false)).map(([ id, data ]) => [ parseInt(id, 10), data ])
+
     // Array of all possible pairs
     const pairs = []
 
-    // Array of all anime IDs
-    const animeIds = Object.keys(anime)
-
     // Cache total number of anime IDs to loop through
-    const total = animeIds.length
+    const total = anime.length
+
+    // Lowest number an anime has won + lost
+    let lowestTotal = anime.map(([ , { wonAgainst, lostTo }]) => wonAgainst.length + lostTo.length).sort()[0]
 
     // Go through each anime (outer)
     for (let i = 0; i < total; i += 1) {
+        const [ outerId, outerAnime ] = anime[i]
+
         // Go through each other anime in front of this one (inner)
         for (let j = i + 1; j < total; j += 1) {
-            // IDs of the outer and inner anime
-            const outerAnimeId = parseInt(animeIds[i], 10)
-            const innerAnimeId = parseInt(animeIds[j], 10)
-
-            // Object of the outer anime
-            const outerAnime = anime[outerAnimeId]
+            // Outer and inner anime
+            const [ innerId ] = anime[j]
 
             // Don't include this pair if they've already been compared
-            if (outerAnime.wonAgainst.includes(innerAnimeId) || outerAnime.lostTo.includes(innerAnimeId)) {
+            if (outerAnime.wonAgainst.includes(innerId) || outerAnime.lostTo.includes(innerId)) {
                 continue
             }
 
-            pairs.push([ outerAnimeId, innerAnimeId ])
+            pairs.push([ outerId, innerId ])
         }
     }
 
@@ -123,13 +124,28 @@ function getComparisonPairs(anime) {
         ]
     }
 
-    // Get a random index to return a random pair
-    const randomIndex = randomBetween(0, pairs.length - 1)
+    // Try to get a valid pair of anime
+    let randomPair
+    let isValidPair = false
+
+    do {
+        // Get a random pair
+        randomPair = pairs[randomBetween(0, pairs.length - 1)]
+
+        // First, make sure all anime have been compared with another anime at least once
+        if (lowestTotal === 0) {
+            isValidPair = randomPair.every(animeId => isValidPairItem(animeId, lowestTotal))
+
+        // Then, make sure at least one anime out of the pair has been compared the fewest number of times in total
+        } else {
+            isValidPair = randomPair.some(animeId => isValidPairItem(animeId, lowestTotal))
+        }
+    } while (!isValidPair)
 
     // Return the total number of pairs left and a random pair
     return [
         pairs.length,
-        shuffleArray(pairs[randomIndex]),
+        shuffleArray(randomPair),
     ]
 }
 
@@ -138,6 +154,13 @@ function getComparisonPairs(anime) {
  */
 function randomBetween(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
+}
+
+/**
+ * Returns whether the anime from a pair has less or equal to the lowest total wins + losses
+ */
+function isValidPairItem(animeData, lowestTotal) {
+    return (animeData.wonAgainst.length + animeData.lostTo.length) <= lowestTotal
 }
 
 /**
