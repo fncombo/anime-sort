@@ -2,9 +2,6 @@
 import clone from 'clone'
 import shuffleArray from 'shuffle-array'
 
-// Factor used in the Elo formula
-const kFactor = 32
-
 /**
  * Compares 2 anime against each other.
  */
@@ -85,26 +82,34 @@ function compare(allAnime, winnerId, loserId) {
 /**
  * Returns the total numbers of pairs remaining and a random pair for comparison.
  */
-function getComparisonPairs(allAnime) {
+function getComparisonPairs(allAnime, previousPair) {
     // Make a copy of all anime to not affect state
-    const anime = Object.entries(clone(allAnime, false)).map(([ id, data ]) => [ parseInt(id, 10), data ])
+    // Shuffle that array to keep things fresh
+    const anime = shuffleArray(Object.entries(clone(allAnime, false)))
+        // Make the ID a number again (object keys are strings)
+        .map(([ id, data ]) => [ parseInt(id, 10), data ])
+        // Sort by total number of wins + losses
+        .sort(([ , { wonAgainst: aWonAgainst, lostTo: aLostTo }], [ , { wonAgainst: bWonAgainst, lostTo: bLostTo } ]) => {
+            return (aWonAgainst.length + aLostTo.length) - (bWonAgainst.length + bLostTo.length)
+        })
 
     // Array of all possible pairs
     const pairs = []
 
-    // Cache total number of anime IDs to loop through
+    // Total number of anime to loop through
     const total = anime.length
 
     // Lowest number an anime has won + lost
-    let lowestTotal = anime.map(([ , { wonAgainst, lostTo }]) => wonAgainst.length + lostTo.length).sort()[0]
+    const [ lowestTotal ] = anime.map(([ , { wonAgainst, lostTo }]) => wonAgainst.length + lostTo.length).sort((a, b) => a - b)
 
     // Go through each anime (outer)
     for (let i = 0; i < total; i += 1) {
+        // Outer anime ID and data
         const [ outerId, outerAnime ] = anime[i]
 
         // Go through each other anime in front of this one (inner)
         for (let j = i + 1; j < total; j += 1) {
-            // Outer and inner anime
+            // Inner anime ID
             const [ innerId ] = anime[j]
 
             // Don't include this pair if they've already been compared
@@ -116,37 +121,50 @@ function getComparisonPairs(allAnime) {
         }
     }
 
+    // Total number of pairs generated
+    const totalPairs = pairs.length
+
     // No more pairs left for comparison
-    if (!pairs.length) {
-        return [
-            0,
-            pairs,
-        ]
+    if (!totalPairs) {
+        return [ totalPairs, pairs ]
     }
 
     // Try to get a valid pair of anime
     let randomPair
     let isValidPair = false
+    let pairTries = 0
 
+    // Try to find a valid pair
     do {
-        // Get a random pair
-        randomPair = pairs[randomBetween(0, pairs.length - 1)]
+        // Get a pair
+        randomPair = pairs[pairTries]
 
         // First, make sure all anime have been compared with another anime at least once
         if (lowestTotal === 0) {
-            isValidPair = randomPair.every(animeId => isValidPairItem(animeId, lowestTotal))
+            isValidPair = randomPair.every(animeId => isValidPairItem(allAnime[animeId], lowestTotal))
 
         // Then, make sure at least one anime out of the pair has been compared the fewest number of times in total
         } else {
-            isValidPair = randomPair.some(animeId => isValidPairItem(animeId, lowestTotal))
+            isValidPair = randomPair.some(animeId => isValidPairItem(allAnime[animeId], lowestTotal))
+        }
+
+        // Try not to show the same anime two times in a row
+        if (previousPair && randomPair.some(animeId => previousPair.includes(animeId))) {
+            isValidPair = false
+        }
+
+        // Prevent infinite loops
+        pairTries += 1
+
+        // No valid pair found, return a random one instead
+        if (pairTries === totalPairs - 1) {
+            randomPair = pairs[randomBetween(0, totalPairs)]
+            isValidPair = true
         }
     } while (!isValidPair)
 
     // Return the total number of pairs left and a random pair
-    return [
-        pairs.length,
-        shuffleArray(randomPair),
-    ]
+    return [ totalPairs, shuffleArray(randomPair) ]
 }
 
 /**
@@ -174,7 +192,22 @@ function getExpected(aElo, bElo) {
  * Return the new Elo based on the expected score, actual outcome (1 for win, 0 for loss), and the current Elo.
  */
 function getNewElo(expected, actual, current) {
+    const kFactor = getKFactor(current)
+
     return Math.round(current + kFactor * (actual - expected))
+}
+
+/**
+ * Return's a K-factor to use based on current Elo
+ */
+function getKFactor(elo) {
+    if (elo > 2400) {
+        return 16
+    } else if (elo > 2100) {
+        return 24
+    }
+
+    return 32
 }
 
 // Exports

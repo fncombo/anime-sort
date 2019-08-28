@@ -156,7 +156,7 @@ function reducer(state, action) {
         const [ anime, autoEliminatedCountA, autoEliminatedCountB ] = compare(state.anime, action.winnerId, action.loserId)
 
         // Get the total remaining number of pairs, and a new random pair for comparison
-        const [ totalRemainingPairs, currentPair ] = getComparisonPairs(anime)
+        const [ totalRemainingPairs, currentPair ] = getComparisonPairs(anime, state.currentPair)
 
         // Make a copy of some of the previous state data for undo
         const previousState = {
