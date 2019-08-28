@@ -174,8 +174,7 @@ function App() {
                     all anime that won against it will automatically win against <span>Anime C</span> and and all anime that lost to it, thus eliminating the need for you to make these decisions manually.
                 </p>
                 <p>
-                    During sorting, you will see a significant increase in total sorting progress as you approach the middle, and it will slow down again towards the very end.
-                    It should take you about 5 to 15 minutes to do if you have up to 100 completed anime, 20 to 30 minutes if you have up to 200 anime, and over 30 minutes if you have over 200 anime.
+                    During sorting, you will see a significant increase in total progress as you make more and more decisions and each anime builds up a win/loss history, so don't worry if it feels too slow at the start!
                 </p>
                 <p>
                     View source code on <a href="https://github.com/fncombo/anime-sort" target="_blank" rel="noopener noreferrer">GitHub</a>.

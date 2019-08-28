@@ -218,4 +218,12 @@ button,
 .description {
     padding: 1rem 0 0;
     text-align: center;
+
+    p {
+        margin: 0 0 1rem 0;
+
+        &:last-child {
+            margin: 0;
+        }
+    }
 }
