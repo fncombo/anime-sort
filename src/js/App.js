@@ -95,22 +95,25 @@ function App() {
         const fileReader = new FileReader()
 
         fileReader.onloadend = () => {
+            let importData
+
             try {
-                const importData = JSON.parse(fileReader.result)
-
-                // JSON parsed, now make sure the data inside is correct
-                if (!validateImportData(importData)) {
-                    dispatch({ type: ACTIONS.IMPORT_ERROR })
-                    return
-                }
-
-                dispatch({
-                    type: ACTIONS.IMPORT_DONE,
-                    importData,
-                })
+                importData = JSON.parse(fileReader.result)
             } catch (error) {
                 dispatch({ type: ACTIONS.IMPORT_ERROR })
+                return
             }
+
+            // JSON parsed, now make sure the data inside is correct
+            if (!validateImportData(importData)) {
+                dispatch({ type: ACTIONS.IMPORT_ERROR })
+                return
+            }
+
+            dispatch({
+                type: ACTIONS.IMPORT_DONE,
+                importData,
+            })
         }
 
         // Any file reading error
