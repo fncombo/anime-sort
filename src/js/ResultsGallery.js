@@ -2,6 +2,7 @@
 import React, { useContext, useState } from 'react'
 
 // Libraries
+import clone from 'clone'
 import { saveAs } from 'file-saver'
 
 // Helpers
@@ -9,6 +10,13 @@ import { GlobalState } from './State'
 
 // Style
 import '../scss/ResultsGallery.scss'
+
+/**
+ * Sort anime by Elo.
+ */
+function eloSort([ , { elo: aElo} ], [ , { elo: bElo } ]) {
+    return bElo - aElo
+}
 
 /**
  * Show a gallery of all the anime sorted by Elo.
@@ -33,9 +41,7 @@ function ResultsGallery() {
     const allAnime = Object.entries(anime)
 
     // Save each anime's index relative to all anime after being sorted by Elo
-    const indexedAnime = [ ...allAnime ].sort(([ , { elo: aElo} ], [ , { elo: bElo } ]) => {
-        return bElo - aElo
-    }).map((animeObject, index) => {
+    const indexedAnime = clone(allAnime).sort(eloSort).map((animeObject, index) => {
         animeObject[1].index = index
         return animeObject
     })
@@ -206,9 +212,7 @@ function SuggestedRatingsGallery({ anime }) {
                             <span>({ratingAnime.length} anime, {(ratingAnime.length / anime.length * 100).toFixed(2).toLocaleString()}%)</span>
                         </h2>
                         <div className="gallery">
-                            {ratingAnime.sort(([ , { elo: aElo} ], [ , { elo: bElo } ]) => {
-                                return bElo - aElo
-                            }).map(([ id, { title = false, elo, wonAgainst, lostTo } ], index) =>
+                            {ratingAnime.sort(eloSort).map(([ id, { title = false, elo, wonAgainst, lostTo } ], index) =>
                                 <GalleryItem
                                     anime={animeObject.hasOwnProperty(id) ? animeObject[id] : false}
                                     id={id}
