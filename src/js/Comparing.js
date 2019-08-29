@@ -81,7 +81,7 @@ function CompareAnime() {
         return () => {
             window.removeEventListener('keyup', keyHandler)
         }
-    })
+    }, [ isSaved, dispatch, leftId, rightId ])
 
     // All anime array to calculate length
     const allAnime = Object.entries(anime)
