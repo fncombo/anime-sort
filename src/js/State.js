@@ -242,7 +242,23 @@ function reducer(state, action) {
      * Completely restore a previously saved state to continue sorting.
      */
     case ACTIONS.RESTORE_STATE: {
-        const savedState = JSON.parse(localStorage.getItem('savedState'))
+        let savedState
+
+        // Try to get the saved state from local storage
+        try {
+            savedState = JSON.parse(localStorage.getItem('savedState'))
+
+            // Falsy state
+            if (!savedState) {
+                throw new Error()
+            }
+
+        // If something happened to the state, clear it
+        } catch (error) {
+            localStorage.clear()
+
+            return state
+        }
 
         return {
             ...savedState,
