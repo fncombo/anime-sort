@@ -239,7 +239,7 @@ function reducer(state, action) {
     }
 
     /**
-     * Completely restore a previously saved state to continue sorting.
+     * Completely restore a previously saved state to continue comparing.
      */
     case ACTIONS.RESTORE_STATE: {
         let savedState
