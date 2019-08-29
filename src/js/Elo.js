@@ -126,7 +126,10 @@ function getComparisonPairs(allAnime, previousPair) {
 
     // No more pairs left for comparison
     if (!totalPairs) {
-        return [ totalPairs, pairs ]
+        return [
+            totalPairs,
+            pairs,
+        ]
     }
 
     // Try to get a valid pair of anime
@@ -164,7 +167,10 @@ function getComparisonPairs(allAnime, previousPair) {
     } while (!isValidPair)
 
     // Return the total number of pairs left and a random pair
-    return [ totalPairs, shuffleArray(randomPair) ]
+    return [
+        totalPairs,
+        shuffleArray(randomPair),
+    ]
 }
 
 /**
