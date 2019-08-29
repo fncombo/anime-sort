@@ -23,7 +23,7 @@ function compare(allAnime, winnerId, loserId) {
         const winnerExpected = getExpected(winnerElo, loserElo)
         const loserExpected = getExpected(loserElo, winnerElo)
 
-        // Update the Elo of winner and loser and record this match
+        // Update the Elo of winner and loser and record this comparison
         anime[eloWinnerId].elo = getNewElo(winnerExpected, 1, winnerElo)
         anime[eloWinnerId].wonAgainst.push(eloLoserId)
 

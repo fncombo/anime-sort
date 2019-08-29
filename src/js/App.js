@@ -167,24 +167,19 @@ function App() {
             <div className="container is-column is-border description">
                 <p><strong>How does this work?</strong></p>
                 <p>
-                    This app uses the <a href="https://en.wikipedia.org/wiki/Elo_rating_system" target="_blank" rel="noopener noreferrer">Elo rating system</a> to
-                    sort anime by continuously comparing two anime against each other. Each anime gains and loses rank points based on which anime it won against or lost to.
+                    This app uses the <a href="https://en.wikipedia.org/wiki/Elo_rating_system" target="_blank" rel="noopener noreferrer">Elorating system</a> to sort anime by continuously <a href="https://en.wikipedia.org/wiki/Pairwise_comparison" target="_blank" rel="noopener noreferrer">comparing two anime</a> against each other. Each anime gains and loses rank points based on which anime it won against or lost to.
                 </p>
                 <p>
-                    Due to the exponential nature of this sort, to significantly reduce the number of comparisons you need to manually make for very large sets of anime,
-                    losers of the loser will automatically lose to the winner, similarly, winners against the winner will automatically win against the loser. This can reduce the
-                    number of manual comparisons you need to make by up to 99.5%.
+                    Due to the exponential nature of this method, to significantly reduce the number of manual comparisons you need to make for very large sets of anime, losers of the loser will automatically lose to the winner, similarly, winners against the winner will automatically win against the loser. This can reduce the number of manual comparisons you need to make by up to 99.5%.
                 </p>
                 <p className="pre">
-                    In other words, if you choose <span>Anime A</span> over <span>Anime B</span>, and choose <span>Anime B</span> over <span>Anime C</span>, then <span>Anime A</span> and
-                    all anime that won against it will automatically win against <span>Anime C</span> and and all anime that lost to it, thus eliminating the need for you to make these decisions manually.
+                    In other words, if you choose <span>Anime A</span> over <span>Anime B</span>, and choose <span>Anime B</span> over <span>Anime C</span>, then <span>Anime A</span> and all anime that won against it will automatically win against <span>Anime C</span> and and all anime that lost to it, thus eliminating the need for you to make these decisions manually.
                 </p>
                 <p>
                     During sorting, you will see a significant increase in total progress as you make more and more decisions and each anime builds up a win/loss history, so don't worry if it feels too slow at the start!
                 </p>
                 <p>
-                    View source code on <a href="https://github.com/fncombo/anime-sort" target="_blank" rel="noopener noreferrer">GitHub</a>.
-                    API data powered by <a href="https://jikan.moe/" target="_blank" rel="noopener noreferrer">Jikan API</a>, thanks!
+                    View source code on <a href="https://github.com/fncombo/anime-sort" target="_blank" rel="noopener noreferrer">GitHub</a>. API data powered by <a href="https://jikan.moe/" target="_blank" rel="noopener noreferrer">Jikan API</a>, thanks!
                 </p>
             </div>
         </>

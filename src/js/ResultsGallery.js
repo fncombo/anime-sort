@@ -47,7 +47,7 @@ function ResultsGallery() {
         return animeObject
     })
 
-    // Format the timestamp of when the sorting was completed
+    // Format the timestamp of when the comparing was completed
     const completedString = new Intl.DateTimeFormat('en-GB', {
         weekday: 'long',
         year: 'numeric',
