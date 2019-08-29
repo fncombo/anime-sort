@@ -87,6 +87,10 @@ function App() {
 
     // Import a file
     const onImport = file => {
+        if (!file) {
+            return
+        }
+
         // Attempt to read the file as JSON
         const fileReader = new FileReader()
 
