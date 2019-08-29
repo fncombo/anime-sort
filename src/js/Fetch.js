@@ -64,33 +64,22 @@ async function getAnimeList(username, page = 1, isRetry = false) {
  * Validates that the imported data is correct.
  */
 function validateImportData(importData) {
+    // List of required properties and their types
+    const requiredProps = {
+        username: 'string',
+        anime: 'object',
+        totalInitialPairs: 'number',
+        manuallyEliminatedCount: 'number',
+        autoEliminatedCountA: 'number',
+        autoEliminatedCountB: 'number',
+        completedTimestamp: 'number',
+    }
+
     // Check for all required properties and make sure they are the right type
-    if (!importData.hasOwnProperty('username') || typeof importData.username !== 'string') {
-        return
-    }
-
-    if (!importData.hasOwnProperty('anime') || typeof importData.anime !== 'object') {
-        return
-    }
-
-    if (!importData.hasOwnProperty('totalInitialPairs') || typeof importData.totalInitialPairs !== 'number') {
-        return
-    }
-
-    if (!importData.hasOwnProperty('manuallyEliminatedCount') || typeof importData.manuallyEliminatedCount !== 'number') {
-        return
-    }
-
-    if (!importData.hasOwnProperty('autoEliminatedCountA') || typeof importData.autoEliminatedCountA !== 'number') {
-        return
-    }
-
-    if (!importData.hasOwnProperty('autoEliminatedCountB') || typeof importData.autoEliminatedCountB !== 'number') {
-        return
-    }
-
-    if (!importData.hasOwnProperty('completedTimestamp') || typeof importData.completedTimestamp !== 'number') {
-        return
+    for (const [ propName, propType ] of Object.entries(requiredProps)) {
+        if (!importData.hasOwnProperty(propName) || typeof importData[propName] !== propType) {
+            return false
+        }
     }
 
     // Regex to simply match anime ID which is all numbers
