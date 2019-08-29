@@ -165,16 +165,16 @@ function SuggestedRatingsGallery({ anime }) {
 
     // Lower Elo thresholds for each rating
     const ratingThresholds = {
-        10: 2600, // Base
-        9:  2400, // -200
-        8:  2150, // -250
-        7:  1850, // -300
-        6:  1500, // -350
-        5:  1100, // -400
-        4:   750, // -350
-        3:   450, // -300
-        2:   200, // -250
-        1:     0, // -200
+        10: 2600, // +300
+        9:  2300, // +250
+        8:  2050, // +200
+        7:  1850, // +150
+        6:  1700, // +100
+        5:  1600, // Base Elo for all anime
+        4:  1500, // -100
+        3:  1350, // -150
+        2:  1150, // -200
+        1:     0,
     }
 
     // Sort anime into each rating based on Elo
