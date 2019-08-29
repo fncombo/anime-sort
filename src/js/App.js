@@ -32,7 +32,6 @@ function App() {
                 apiData = await getAnimeList(state.username)
             } catch (error) {
                 dispatch({ type: ACTIONS.ERROR_LOADING })
-
                 return
             }
 
@@ -63,7 +62,7 @@ function App() {
         )
     }
 
-    // Currently comparing, show the left/right UI
+    // Currently comparing, show the comparison UI
     if (state.isFinishedLoading) {
         return (
             <GlobalState.Provider value={{ state, dispatch }}>

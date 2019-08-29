@@ -43,6 +43,7 @@ function ResultsGallery() {
     // Save each anime's index relative to all anime after being sorted by Elo
     const indexedAnime = clone(allAnime).sort(eloSort).map((animeObject, index) => {
         animeObject[1].index = index
+
         return animeObject
     })
 
@@ -92,7 +93,7 @@ function ResultsGallery() {
         })
 
         // Save it
-        const blob = new Blob([data], { type: fileType })
+        const blob = new Blob([ data ], { type: fileType })
 
         saveAs(blob, fileName)
     }
@@ -188,6 +189,7 @@ function SuggestedRatingsGallery({ anime }) {
         // Get all anime that match this rating's Elo range
         const matchingAnime = anime.filter(([ , { elo } ]) => elo >= lower && elo < upper).map(animeObject => {
             animeObject[1].rating = ratingInt
+
             return animeObject
         })
 
