@@ -23,29 +23,34 @@
     justify-content: center;
     align-items: center;
     opacity: 1;
-    transform: scale(1);
+    transform: scale(1) translateZ(0);
+    filter: grayscale(0) blur(0);
     transition: all $duration $easing;
 
     .comparison-stage-enter & {
         opacity: 0;
-        transform: scale(0.825);
+        transform: scale(0.825) translateZ(0);
+        filter: grayscale(1) blur(2rem);
     }
 
     .comparison-stage-enter-active &,
     .comparison-stage-enter-done & {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) translateZ(0);
+        filter: grayscale(0) blur(0);
     }
 
     .comparison-stage-exit & {
         opacity: 1;
-        transform: scale(1);
+        transform: scale(1) translateZ(0);
+        filter: grayscale(0) blur(0);
     }
 
     .comparison-stage-exit-active &,
     .comparison-stage-exit-done & {
         opacity: 0;
-        transform: scale(0.825);
+        transform: scale(0.825) translateZ(0);
+        filter: grayscale(1) blur(2rem);
     }
 
     &.is-normal {
