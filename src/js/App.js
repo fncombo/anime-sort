@@ -148,7 +148,7 @@ function App() {
                 {state.isImportError && <p className="error">Could not import the previous sort.</p>}
                 <form onSubmit={onSubmitUsername}>
                     <div>
-                        <input type="text" onChange={onUsernameChange} value={state.username} />
+                        <input type="text" onChange={onUsernameChange} value={state.username} autoFocus={true} />
                         <button disabled={!state.username.length} type="submit">Start!</button>
                     </div>
                     <div className="or">or</div>
