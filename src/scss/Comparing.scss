@@ -7,6 +7,14 @@
 .comparison-row {
     display: flex;
     width: 100%;
+
+    &:first-child {
+        margin-top: 1rem;
+    }
+
+    &:last-child {
+        margin-bottom: 1rem;
+    }
 }
 
 .comparison-col {
@@ -20,7 +28,7 @@
 
     .comparison-stage-enter & {
         opacity: 0;
-        transform: scale(0.875);
+        transform: scale(0.825);
     }
 
     .comparison-stage-enter-active &,
@@ -37,7 +45,7 @@
     .comparison-stage-exit-active &,
     .comparison-stage-exit-done & {
         opacity: 0;
-        transform: scale(0.875);
+        transform: scale(0.825);
     }
 
     &.is-normal {
@@ -48,12 +56,13 @@
 }
 
 .comparison-button {
+    height: 350px;
     margin: 1rem 0;
     cursor: pointer;
     transition: transform $duration $easing;
 
     &:hover {
-        transform: scale(1.125);
+        transform: scale(1.175);
     }
 }
 
