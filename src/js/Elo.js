@@ -164,9 +164,9 @@ function getComparisonPairs(allAnime, previousPair) {
         // Prevent infinite loops
         pairTries += 1
 
-        // No valid pair found, return the first one instead as it's the most likely to have the fewest compared anime
+        // No valid pair found, return a random one instead
         if (pairTries === totalPairs - 1) {
-            randomPair = pairs[0]
+            randomPair = pairs[randomBetween(0, totalPairs - 1)]
             isValidPair = true
         }
     } while (!isValidPair)
@@ -176,6 +176,12 @@ function getComparisonPairs(allAnime, previousPair) {
         totalPairs,
         shuffleArray(randomPair),
     ]
+}
+/**
+ * Returns a random number between min and max, inclusive.
+ */
+function randomBetween(min, max) {
+    return Math.floor(Math.random() * (max - min + 1) + min)
 }
 
 /**
