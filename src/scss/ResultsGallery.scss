@@ -1,29 +1,5 @@
 @import '_base.scss';
 
-.gallery-section {
-    &.is-border {
-        border: none;
-
-        &::before {
-            content: '';
-            background: $border;
-            display: block;
-            width: calc(100% - 4rem);
-            height: 1px;
-            margin: 0 auto 2rem;
-        }
-    }
-
-    h2 {
-        text-align: center;
-
-        span {
-            color: rgba(0, 0, 0, 0.5);
-            margin: 0 0 0 0.5rem;
-        }
-    }
-}
-
 .gallery {
     width: 100%;
     display: flex;
@@ -44,26 +20,4 @@
 
 .gallery-export {
     margin: 0.5rem 0 1rem;
-}
-
-.gallery-warning {
-    max-width: 750px;
-    margin: 0 0 0.5rem !important;
-    text-align: center;
-    color: $red;
-}
-
-.gallery-checkbox {
-    display: flex;
-    margin: 0 0 1rem;
-    align-items: center;
-
-    input {
-        margin: 0 0.25rem 0 0;
-    }
-}
-
-.gallery-average {
-    margin: 0 0 2rem;
-    text-align: center;
 }

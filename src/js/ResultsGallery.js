@@ -1,5 +1,5 @@
 // React
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 
 // Libraries
 import clone from 'clone'
@@ -34,18 +34,8 @@ function ResultsGallery() {
         completedTimestamp,
     } } = useContext(GlobalState)
 
-    // Whether to show suggested rating distributions
-    const [ showRatings, setShowRatings ] = useState(false)
-
     // Get all anime in an array form
     const allAnime = Object.entries(anime)
-
-    // Save each anime's index relative to all anime after being sorted by Elo
-    const indexedAnime = clone(allAnime).sort(eloSort).map((animeObject, index) => {
-        animeObject[1].index = index
-
-        return animeObject
-    })
 
     // Format the timestamp of when the comparing was completed
     const completedString = new Intl.DateTimeFormat('en-GB', {
@@ -98,11 +88,6 @@ function ResultsGallery() {
         saveAs(blob, fileName)
     }
 
-    // Handler to update state on checkbox toggle
-    const onChangeShowRatings = ({ target: { checked }}) => {
-        setShowRatings(checked)
-    }
-
     return (
         <>
             <div className="container is-column">
@@ -112,148 +97,22 @@ function ResultsGallery() {
                 <p><strong>Total pairs of anime compared:</strong> {totalInitialPairs.toLocaleString()}</p>
                 <p><strong>Sorting completed on:</strong> {completedString}</p>
                 <button className="gallery-export" onClick={exportData}>Export data as JSON</button>
-                <label className="gallery-checkbox">
-                    <input type="checkbox" checked={showRatings} onChange={onChangeShowRatings} /> Show suggested MyAnimeList ratings
-                </label>
-                {showRatings &&
-                    <p className="gallery-warning">
-                        <strong>Warning!</strong> This is based on the anime's Elo and is very opinionated and rudimentary. Please do not take these
-                        rating suggestions seriously. Works better with more total anime.
-                    </p>
-                }
             </div>
-            {showRatings
-                ? <SuggestedRatingsGallery anime={indexedAnime} />
-                : <NormalRatingsGallery anime={indexedAnime} />
-            }
-        </>
-    )
-}
-
-/**
- * Splits up the gallery into theoretical ratings from 1 to 10 based on Elo.
- */
-function SuggestedRatingsGallery({ anime }) {
-    const { state: { animeObject } } = useContext(GlobalState)
-
-    // Placeholder for all anime relating to each rating
-    const ratings = {
-        10: [],
-        9: [],
-        8: [],
-        7: [],
-        6: [],
-        5: [],
-        4: [],
-        3: [],
-        2: [],
-        1: [],
-    }
-
-    // Text description of each rating
-    const ratingDescriptions = {
-        10: 'Masterpiece – 10',
-        9:  'Great – 9',
-        8:  'Very Good – 8',
-        7:  'Good – 7',
-        6:  'Fine – 6',
-        5:  'Average – 5',
-        4:  'Bad – 4',
-        3:  'Very Bad – 3',
-        2:  'Horrible – 2',
-        1:  'Appalling – 1',
-    }
-
-    // Lower Elo thresholds for each rating
-    const ratingThresholds = {
-        10: 2600, // +300
-        9:  2300, // +250
-        8:  2050, // +200
-        7:  1850, // +150
-        6:  1700, // +100
-        5:  1600, // Base Elo for all anime
-        4:  1500, // -100
-        3:  1350, // -150
-        2:  1150, // -200
-        1:     0,
-    }
-
-    // Sort anime into each rating based on Elo
-    for (const [ rating, lower ] of Object.entries(ratingThresholds)) {
-        // Work with a real number please
-        const ratingInt = parseInt(rating, 10)
-
-        // Upper Elo is the lower threshold of the next rating up
-        const upper = ratingInt === 10 ? 9999 : ratingThresholds[ratingInt + 1]
-
-        // Get all anime that match this rating's Elo range
-        const matchingAnime = anime.filter(([ , { elo } ]) => elo >= lower && elo < upper).map(animeObject => {
-            animeObject[1].rating = ratingInt
-
-            return animeObject
-        })
-
-        ratings[rating].push(...matchingAnime)
-    }
-
-    // Calculate the average rating
-    const averageRating = anime.reduce((total, [ , { rating } ]) => (rating + total), 0) / anime.length
-
-    return (
-        <>
-            <p className="gallery-average">
-                <strong>Average rating:</strong> {averageRating.toFixed(2).toLocaleString()}
-            </p>
-            {Object.entries(ratings)
-                .filter(([ , ratingAnime ]) => !!ratingAnime.length)
-                .sort(([ ratingA ], [ ratingB ]) => ratingB - ratingA)
-                .map(([ rating, ratingAnime ]) =>
-                    <div className="gallery-section is-border" key={rating}>
-                        <h2>
-                            {ratingDescriptions[rating]}
-                            <span>({ratingAnime.length} anime, {(ratingAnime.length / anime.length * 100).toFixed(2).toLocaleString()}%)</span>
-                        </h2>
-                        <div className="gallery">
-                            {ratingAnime.sort(eloSort).map(([ id, { title = false, elo, wonAgainst, lostTo } ], index) =>
-                                <GalleryItem
-                                    anime={animeObject.hasOwnProperty(id) ? animeObject[id] : false}
-                                    id={id}
-                                    title={title}
-                                    index={index}
-                                    elo={elo}
-                                    wonAgainst={wonAgainst.length}
-                                    lostTo={lostTo.length}
-                                    key={id}
-                                />
-                            )}
-                        </div>
-                    </div>
+            <div className="gallery">
+                {allAnime.sort(eloSort).map(([ id, { title = false, elo, wonAgainst, lostTo } ], index) =>
+                    <GalleryItem
+                        anime={animeObject.hasOwnProperty(id) ? animeObject[id] : false}
+                        id={id}
+                        title={title}
+                        index={index}
+                        elo={elo}
+                        wonAgainst={wonAgainst.length}
+                        lostTo={lostTo.length}
+                        key={id}
+                    />
                 )}
+            </div>
         </>
-    )
-}
-
-/**
- * Displays a normal gallery of all the sorted anime.
- */
-function NormalRatingsGallery({ anime }) {
-    const { state: { animeObject } } = useContext(GlobalState)
-
-    return (
-        <div className="gallery">
-            {anime.map(([ id, { title = false, elo, wonAgainst, lostTo } ], index) =>
-                <GalleryItem
-                    anime={animeObject.hasOwnProperty(id) ? animeObject[id] : false}
-                    id={id}
-                    title={title}
-                    index={index}
-                    elo={elo}
-                    wonAgainst={wonAgainst.length}
-                    lostTo={lostTo.length}
-                    key={id}
-                />
-            )}
-        </div>
     )
 }
 
