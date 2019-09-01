@@ -110,10 +110,15 @@ function getComparisonPairs(allAnime, previousPair) {
         // Go through each other anime in front of this one (inner)
         for (let j = i + 1; j < total; j += 1) {
             // Inner anime ID
-            const [ innerId ] = anime[j]
+            const [ innerId, innerAnime ] = anime[j]
 
             // Don't include this pair if they've already been compared
-            if (outerAnime.wonAgainst.includes(innerId) || outerAnime.lostTo.includes(innerId)) {
+            if (
+                outerAnime.wonAgainst.includes(innerId) ||
+                outerAnime.lostTo.includes(innerId) ||
+                innerAnime.wonAgainst.includes(outerId) ||
+                innerAnime.lostTo.includes(outerId)
+            ) {
                 continue
             }
 
