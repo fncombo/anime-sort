@@ -2,7 +2,6 @@
 import React, { useContext } from 'react'
 
 // Libraries
-import clone from 'clone'
 import { saveAs } from 'file-saver'
 
 // Helpers
