@@ -83,9 +83,8 @@ function compare(allAnime, winnerId, loserId) {
  * Returns the total numbers of pairs remaining and a random pair for comparison.
  */
 function getComparisonPairs(allAnime, previousPair) {
-    // Make a copy of all anime to not affect state
     // Shuffle that array to keep things fresh
-    const anime = shuffleArray(Object.entries(clone(allAnime, false)))
+    const anime = shuffleArray(Object.entries(allAnime))
         // Make the ID a number again (object keys are strings)
         .map(([ id, data ]) => [ parseInt(id, 10), data ])
         // Sort by total number of wins + losses
