@@ -80,7 +80,7 @@ function compare(allAnime, winnerId, loserId) {
 }
 
 /**
- * Returns the total numbers of pairs remaining and a random pair for comparison.
+ * Returns the total numbers of pairs remaining and the next pair for comparison.
  */
 function getComparisonPairs(allAnime, previousPair) {
     // Shuffle that array to keep things fresh
