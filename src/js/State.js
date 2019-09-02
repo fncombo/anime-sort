@@ -110,7 +110,7 @@ function reducer(state, action) {
             return object
         }, {})
 
-        // Get the total initial number of pairs, and a new random pair for comparison
+        // Get the total initial number of pairs, and the next pair for comparison
         const [ totalInitialPairs, currentPair ] = getComparisonPairs(anime)
 
         return {
@@ -148,14 +148,14 @@ function reducer(state, action) {
     /**
      * Update a pair of anime, where one is the winner and the other is the loser.
      * Also, save a copy of some of the previous state data to be able to undo this action.
-     * Then, get a random pair of anime for comparison, as well as the number of total pairs remaining to be compared.
+     * Then, get the next pair of anime for comparison, as well as the number of total pairs remaining to be compared.
      * If there are no more pairs to compare, display the final gallery of sorted anime.
      */
     case ACTIONS.UPDATE_PAIR: {
         // Run the Elo algorithm
         const [ anime, autoEliminatedCountA, autoEliminatedCountB ] = compare(state.anime, action.winnerId, action.loserId)
 
-        // Get the total remaining number of pairs, and a new random pair for comparison
+        // Get the total remaining number of pairs, and the next pair for comparison
         const [ totalRemainingPairs, currentPair ] = getComparisonPairs(anime, state.currentPair)
 
         // Make a copy of some of the previous state data for undo

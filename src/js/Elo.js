@@ -141,27 +141,27 @@ function getComparisonPairs(allAnime, previousPair) {
         ]
     }
 
-    // Try to get a valid pair of anime
-    let randomPair
+    // Try to get the next valid pair of anime
+    let nextPair
     let isValidPair = false
     let pairTries = 0
 
     // Try to find a valid pair
     do {
         // Get a pair
-        randomPair = pairs[pairTries]
+        nextPair = pairs[pairTries]
 
         // First, make sure all anime have been compared with another anime at least once
         if (lowestTotal === 0) {
-            isValidPair = randomPair.every(animeId => isValidPairItem(allAnime[animeId], lowestTotal))
+            isValidPair = nextPair.every(animeId => isValidPairItem(allAnime[animeId], lowestTotal))
 
         // Then, make sure at least one anime out of the pair has been compared the fewest number of times in total
         } else {
-            isValidPair = randomPair.some(animeId => isValidPairItem(allAnime[animeId], lowestTotal))
+            isValidPair = nextPair.some(animeId => isValidPairItem(allAnime[animeId], lowestTotal))
         }
 
         // Try not to show the same anime two times in a row
-        if (previousPair && randomPair.some(animeId => previousPair.includes(animeId))) {
+        if (previousPair && nextPair.some(animeId => previousPair.includes(animeId))) {
             isValidPair = false
         }
 
@@ -170,15 +170,15 @@ function getComparisonPairs(allAnime, previousPair) {
 
         // No valid pair found, return a random one instead
         if (pairTries === totalPairs - 1) {
-            randomPair = pairs[randomBetween(0, totalPairs - 1)]
+            nextPair = pairs[randomBetween(0, totalPairs - 1)]
             isValidPair = true
         }
     } while (!isValidPair)
 
-    // Return the total number of pairs left and a random pair
+    // Return the total number of pairs left and the next pair
     return [
         totalPairs,
-        shuffleArray(randomPair),
+        shuffleArray(nextPair),
     ]
 }
 /**
