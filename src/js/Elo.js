@@ -122,12 +122,7 @@ function getComparisonPairs(allAnime, previousPair) {
             }
 
             // Don't include this pair if they've already been compared
-            if (
-                outerAnime.wonAgainst.includes(innerId) ||
-                outerAnime.lostTo.includes(innerId) ||
-                innerAnime.wonAgainst.includes(outerId) ||
-                innerAnime.lostTo.includes(outerId)
-            ) {
+            if (outerAnime.wonAgainst.includes(innerId) || outerAnime.lostTo.includes(innerId)) {
                 continue
             }
 
