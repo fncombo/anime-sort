@@ -167,7 +167,7 @@ function App() {
             <div className="container is-column is-border description">
                 <p><strong>How does this work?</strong></p>
                 <p>
-                    This app uses the <a href="https://en.wikipedia.org/wiki/Elo_rating_system" target="_blank" rel="noopener noreferrer">Elorating system</a> to sort anime by continuously <a href="https://en.wikipedia.org/wiki/Pairwise_comparison" target="_blank" rel="noopener noreferrer">comparing two anime</a> against each other. Each anime gains and loses rank points based on which anime it won against or lost to.
+                    This app uses the <a href="https://en.wikipedia.org/wiki/Elo_rating_system" target="_blank" rel="noopener noreferrer">Elo rating system</a> to sort anime by continuously <a href="https://en.wikipedia.org/wiki/Pairwise_comparison" target="_blank" rel="noopener noreferrer">comparing two anime</a> against each other. Each anime gains and loses rank points based on which anime it won against or lost to.
                 </p>
                 <p>
                     Due to the exponential nature of this method, to significantly reduce the number of manual comparisons you need to make for very large sets of anime, losers of the loser will automatically lose to the winner, similarly, winners against the winner will automatically win against the loser. This can reduce the number of manual comparisons you need to make by up to 99.5%.
