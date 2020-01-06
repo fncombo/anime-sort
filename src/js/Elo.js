@@ -169,7 +169,7 @@ function getComparisonPairs(allAnime, previousPair) {
         pairTries += 1
 
         // No valid pair found, return a random one instead
-        if (pairTries === totalPairs - 1) {
+        if (pairTries === totalPairs) {
             nextPair = pairs[randomBetween(0, totalPairs - 1)]
             isValidPair = true
         }
