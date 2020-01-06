@@ -118,7 +118,7 @@ function CompareAnime() {
                                 <div className="comparison-row">
                                     <div className="comparison-col">
                                         <div className="comparison-button" onClick={() => chooseWinner(leftId, rightId, state)}>
-                                            <img src={left.image_url} height={350} width={250} alt={right.title} />
+                                            <img src={left.image_url} height={350} width={250} alt={left.title} />
                                         </div>
                                     </div>
                                     <div className="comparison-col">
